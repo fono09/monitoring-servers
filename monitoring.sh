@@ -12,7 +12,7 @@ post_to_slack () {
     state_message="復旧し"
   fi
 
-  echo "$target_hostへのIPv${ip_version},${check_type}疎通が${state_message}ました"|/usr/local/bin/slackcat -s --channel monitoring --token $SLACKCAT_TOKEN
+  echo "$target_hostへのIPv${ip_version},${check_type}疎通が${state_message}ました"|/usr/local/bin/slackcat -s -i ':exclamation:' -u '疎通監視くん' --channel monitoring --token $SLACKCAT_TOKEN
 }
 
 lost_file_name () {
@@ -94,9 +94,10 @@ ip_version=4
 
 ping_test $TARGET_HOST $ip_version $ping_count
 
-ip_version=6
-
-ping_test $TARGET_HOST $ip_version $ping_count
+if [[ $MONITOR_V6 -eq 1 ]]; then
+  ip_version=6
+  ping_test $TARGET_HOST $ip_version $ping_count
+fi
 
 if [[ $MONITOR_V4_HTTPS -eq 1 ]]; then
   ip_version=4
