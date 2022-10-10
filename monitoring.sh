@@ -62,8 +62,8 @@ ping_test () {
   ip_version=$2
   ping_count=$3
   check_type="ping"
-  cmd="ping -c ${ping_count} -${ip_version} ${target_host}"
-  if ! eval $cmd > /dev/null; then
+  loss_rate=$(ping -${ip_version}qc ${ping_count} ${target_host} | sed -n '4p' | sed -E 's/.*, ([0-9]+([.][0-9]*)?)% packet loss,.*/\1/')
+  if [[ $loss_rate -gt 5 ]]; then
     failed $target_host $ip_version $check_type
   else
     if [ -e `lost_file_name $target_host $ip_version $check_type` ]; then
