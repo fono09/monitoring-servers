@@ -89,7 +89,7 @@ https_test () {
 
 
 
-ping_count=5
+ping_count=10
 ip_version=4
 
 ping_test $TARGET_HOST $ip_version $ping_count
