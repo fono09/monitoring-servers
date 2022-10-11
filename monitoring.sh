@@ -63,7 +63,7 @@ ping_test () {
   ping_count=$3
   check_type="ping"
   loss_rate=$(ping -${ip_version}qc ${ping_count} ${target_host} | sed -n '4p' | sed -E 's/.*, ([0-9]+([.][0-9]*)?)% packet loss,.*/\1/')
-  if [[ $loss_rate -gt 5 ]]; then
+  if [ -z $loss_rate ] || [[ $loss_rate -gt 20 ]]; then
     failed $target_host $ip_version $check_type
   else
     if [ -e `lost_file_name $target_host $ip_version $check_type` ]; then
@@ -77,7 +77,7 @@ https_test () {
   ip_version=$2
   check_type="https"
 
-  response_code=`curl -s${ip_version}L https://${TARGET_HOST}/ -o /dev/null -w '%{http_code}\n'`
+  response_code=`curl -s${ip_version}L https://${TARGET_HOST}/ -o /dev/null -w '%{http_code}\n'` || response_code=-1 || true
   if [[ $response_code -ne 200 ]]; then
     failed $target_host $ip_version $check_type
   else
