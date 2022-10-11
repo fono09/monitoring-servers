@@ -105,7 +105,7 @@ if [[ $MONITOR_V4_HTTPS -eq 1 ]]; then
 fi
 
 if [[ $MONITOR_V6_HTTPS -eq 1 ]]; then
-  $ip_version=6
+  ip_version=6
   https_test $TARGET_HOST $ip_version
 fi
 
